@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f5c63">
+<title>診療報酬 〇×一問一答（リハビリスタッフ向け・2026年度）</title>
+<style>
+:root{
+  --bg:#f3f6f6; --card:#ffffff; --ink:#16282b; --sub:#5a6e72; --line:#dbe4e5;
+  --brand:#0f5c63; --brand-ink:#ffffff; --brand-soft:#e2f0f0;
+  --maru:#d6453d; --maru-soft:#fdeceb; --batsu:#2563c9; --batsu-soft:#e8f0fd;
+  --ok:#1f7a4d; --ok-soft:#e6f5ec; --ng:#b3362f; --ng-soft:#fcebea;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0f1719; --card:#182326; --ink:#e8f0f1; --sub:#9db0b3; --line:#2b3a3d;
+    --brand:#3fb3bd; --brand-ink:#06282b; --brand-soft:#1d3336;
+    --maru:#f0766e; --maru-soft:#3a2221; --batsu:#6ea3f5; --batsu-soft:#1c2a40;
+    --ok:#5fce95; --ok-soft:#173326; --ng:#f28b84; --ng-soft:#3a201e;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",Meiryo,sans-serif;
+  font-size:16px;line-height:1.7;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;padding:16px 16px calc(28px + env(safe-area-inset-bottom))}
+h1{font-size:1.3rem;line-height:1.4;margin:8px 0 4px}
+h2{font-size:1.05rem;margin:0 0 8px}
+.lead{color:var(--sub);font-size:.9rem;margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+button:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.mode{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:14px 16px;margin-bottom:10px;min-height:64px}
+.mode b{display:block;font-size:1.02rem}
+.mode span{display:block;color:var(--sub);font-size:.85rem;line-height:1.5}
+.mode:active{background:var(--brand-soft)}
+.mode[disabled]{opacity:.5;cursor:default}
+.toggle{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;margin-bottom:16px}
+.toggle input{width:22px;height:22px;accent-color:var(--brand);flex:none}
+.toggle small{display:block;color:var(--sub);line-height:1.4}
+.primary{display:block;width:100%;background:var(--brand);color:var(--brand-ink);font-weight:700;
+  border-radius:12px;padding:14px;min-height:52px;font-size:1rem}
+.ghost{display:block;width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;
+  padding:12px;min-height:48px;margin-top:10px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;font-size:.9rem;color:var(--sub)}
+.top button{color:var(--sub);padding:8px 4px;text-decoration:underline}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .25s}
+.chap{display:inline-block;font-size:.78rem;color:var(--brand);background:var(--brand-soft);
+  border-radius:999px;padding:2px 10px;margin-bottom:8px}
+.q{font-size:1.08rem;font-weight:600;line-height:1.75;margin:0;overflow-wrap:anywhere}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.ans button{border-radius:16px;min-height:96px;font-size:2.8rem;font-weight:700;line-height:1;border:2px solid}
+.ans .maru{color:var(--maru);border-color:var(--maru);background:var(--maru-soft)}
+.ans .batsu{color:var(--batsu);border-color:var(--batsu);background:var(--batsu-soft)}
+.ans button[disabled]{cursor:default;opacity:.35}
+.ans button.picked{opacity:1;box-shadow:0 0 0 3px var(--ink) inset}
+.fb{border-radius:14px;padding:14px 16px;margin-bottom:12px;border:1px solid}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.ng{background:var(--ng-soft);border-color:var(--ng)}
+.fb strong{display:block;font-size:1.1rem}
+.fb.ok strong{color:var(--ok)} .fb.ng strong{color:var(--ng)}
+.fb .seikai{font-weight:700;margin:4px 0}
+.fb p{margin:0;overflow-wrap:anywhere}
+.score{text-align:center}
+.score .num{font-size:2.6rem;font-weight:800;line-height:1.2;color:var(--brand)}
+.score .num small{font-size:1.1rem;color:var(--sub);font-weight:600}
+.wrong{border-top:1px solid var(--line);padding:12px 0}
+.wrong:first-of-type{border-top:none}
+.wrong .wq{font-weight:600;margin:0 0 4px;overflow-wrap:anywhere}
+.wrong .wa{margin:0;color:var(--sub);font-size:.93rem;overflow-wrap:anywhere}
+.wrong .wa b{color:var(--ink)}
+.foot{color:var(--sub);font-size:.78rem;text-align:center;margin-top:18px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ホーム -->
+<section id="home">
+  <h1>診療報酬 〇×一問一答</h1>
+  <p class="lead">リハビリスタッフ向け・2026年度初期研修。〇か×を押すと、すぐに正解と解説が出ます。</p>
+  <label class="toggle"><input type="checkbox" id="shuffle">
+    <span><b>出題順をシャッフルする</b><small>オフにすると研修書類の項目順に出題します</small></span></label>
+  <button class="mode" data-mode="all"><b>全問を解く</b><span id="allDesc"></span></button>
+  <button class="mode" data-mode="chapter"><b>章を選んで解く</b><span>7つの章から1つ選んで解きます</span></button>
+  <button class="mode" data-mode="random"><b>ランダムに10問</b><span>毎回ちがう10問が出ます（短時間向け）</span></button>
+  <button class="mode" data-mode="review"><b>間違えた問題だけ復習</b><span id="reviewDesc"></span></button>
+  <p class="foot">出典：2026年度初期研修使用書類「第6版 診療報酬（新人）」<br>成績はどこにも送信されません。</p>
+</section>
+
+<!-- 章選択 -->
+<section id="chapters" hidden>
+  <div class="top"><span>章を選んでください</span><button data-go="home">もどる</button></div>
+  <div id="chapList"></div>
+</section>
+
+<!-- 出題 -->
+<section id="quiz" hidden>
+  <div class="top"><span id="count"></span><button id="quit">やめる</button></div>
+  <div class="bar"><i id="barFill"></i></div>
+  <div class="card">
+    <span class="chap" id="chap"></span>
+    <p class="q" id="qText"></p>
+  </div>
+  <div class="ans">
+    <button class="maru" data-pick="true" aria-label="まる">〇</button>
+    <button class="batsu" data-pick="false" aria-label="ばつ">×</button>
+  </div>
+  <div id="fb" class="fb" hidden aria-live="polite">
+    <strong id="fbHead"></strong>
+    <div class="seikai" id="fbAns"></div>
+    <p id="fbText"></p>
+  </div>
+  <button class="primary" id="next" hidden>次の問題へ</button>
+</section>
+
+<!-- 結果 -->
+<section id="result" hidden>
+  <div class="card score">
+    <div id="resTitle"></div>
+    <div class="num"><span id="resScore"></span><small id="resTotal"></small></div>
+    <div id="resRate"></div>
+  </div>
+  <div class="card" id="wrongCard">
+    <h2 id="wrongHead"></h2>
+    <div id="wrongList"></div>
+  </div>
+  <button class="primary" id="retryWrong">間違えた問題をもう一度解く</button>
+  <button class="ghost" data-go="home">ホームにもどる</button>
+</section>
+
+</div>
+<script>
+var QUESTIONS = [{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":true,"q":"個別リハビリは1単位につき連続20分以上の実施が必要であり、爪切り等の介助で行った時間は算定できない。","e":"1単位＝連続20分以上の訓練が必要です。爪切り等の介助の時間はリハビリの実施時間に含められません。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"セラピスト1人あたりの実施単位数の上限は、1日24単位・1週間120単位である。","e":"上限は1日24単位・1週間「108単位」です。120単位ではありません。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"リハビリテーションのための計測のみを実施した日でも、疾患別リハビリテーション料を算定できる。","e":"計測のみを実施した場合は、疾患別リハビリテーション料を算定できません。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":true,"q":"疾患別リハビリテーション料は原則として患者1人につき1日合計6単位まで、厚生労働大臣が定める患者は1日合計9単位まで算定できる。","e":"原則6単位、厚生労働大臣が定める患者（回復期リハ病棟入院料算定患者など）は9単位までです。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"回復期リハビリテーション病棟入院料を算定する患者であれば、運動器リハビリテーション料を算定する患者も1日9単位まで算定できる。","e":"回復期リハ病棟入院料を算定する患者のうち「運動器リハビリテーション料を算定するもの」は9単位の対象から除かれます（1日6単位まで）。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"脳血管疾患等の患者が1日9単位まで算定できるのは、発症日・手術日又は急性増悪の日から90日以内である。","e":"「60日以内」です。起算は「発症日、手術日又は急性増悪の日」です。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"疾患別リハビリテーションと消炎鎮痛等処置を同日に実施した場合、両方を算定できる。","e":"同日に実施した場合は、疾患別リハビリテーション料のみ算定できます。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":true,"q":"呼吸器リハビリテーションと心大血管疾患リハビリテーションの起算日は「リハビリ開始日」である。","e":"起算日は、脳血管・運動器＝発症日もしくは手術日、廃用＝診断日、呼吸器・心大血管＝リハ開始日です。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"廃用症候群リハビリテーションの起算日は「発症日」である。","e":"廃用症候群リハビリテーションの起算日は「診断日」です。発症日・手術日が起算日になるのは脳血管と運動器です。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":true,"q":"病態の異なる複数の疾患を持つ患者には、必要に応じて、それぞれを対象とする疾患別リハビリテーション料を算定できる。","e":"原則は最も適切な区分1つを算定しますが、病態の異なる複数の疾患を持つ場合は、必要に応じそれぞれ算定できます。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"PT・OTが単なる離床目的で車椅子上の座位を取らせた場合も、シーティングとして疾患別リハビリテーション料を算定できる。","e":"シーティングは算定可能ですが、単なる離床目的で車椅子上での座位を取らせるだけの場合は算定できません。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":true,"q":"呼吸器リハビリテーション料の所定点数には、経皮的動脈血酸素飽和度測定や、呼吸機能訓練と同時に行った酸素吸入の費用が含まれる。","e":"呼吸機能検査等、SpO2測定、付随する諸検査、訓練と同時に行った酸素吸入の費用は所定点数に含まれます（別に算定できません）。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":true,"q":"ベッド上から移動せず、ポジショニングや拘縮予防を主目的とした他動的な訓練のみを行う「特定の患者」は、所定点数の100分の90で算定する。","e":"離床を伴わない「特定の患者」は所定点数の100分の90で算定します。ベッド上で自動的な訓練や離床を行う場合は対象外です。"},{"s":"第1章 疾患別リハビリテーション（基本ルール）","a":false,"q":"早期リハビリテーション加算を算定している患者でも、ベッド上で他動的な訓練のみを行った場合は所定点数の100分の90で算定する。","e":"早期リハビリテーション加算・初期加算・急性期リハビリテーション加算のいずれかを算定している患者は「特定の患者」から除外されます（減算の対象外）。"},{"s":"第2章 標準的算定日数と各種加算","a":true,"q":"標準的算定日数を超えてリハビリを継続する場合、継続することとなった日に、診療録への継続理由の記載とリハビリテーション実施計画書の作成・説明が必要である。","e":"継続することとなった日に「診療録への継続理由の記載」と「実施計画書の作成・説明」の両方が必要です。"},{"s":"第2章 標準的算定日数と各種加算","a":false,"q":"算定上限日数を超えて継続する場合、継続することとなった日及びその後3ヶ月に1回以上、FIMの測定によりリハビリの必要性を判断する。","e":"「1ヶ月に1回以上」です。FIM測定で必要性を判断し、あわせてリハビリテーション実施計画書を作成します。"},{"s":"第2章 標準的算定日数と各種加算","a":true,"q":"算定上限日数を超えて月13単位を超えてリハビリを行う場合は、継続の理由を診療報酬明細書の摘要欄に記載する必要がある。","e":"13単位/月を超えて行う場合は、継続理由の摘要欄記載が必要です。"},{"s":"第2章 標準的算定日数と各種加算","a":false,"q":"外来の要介護被保険者等である患者も、必要があれば標準的算定日数を超えて疾患別リハビリテーション料を算定できる。","e":"外来の要介護被保険者等である患者は、標準的算定日数を超えて算定することができません（介護保険のリハビリへ移行）。"},{"s":"第2章 標準的算定日数と各種加算","a":false,"q":"早期リハビリテーション加算は、入院した日から起算して30日を限度として算定できる。","e":"入院した日から起算して「14日」が限度です。30日目までが限度なのは休日リハビリテーション加算です。"},{"s":"第2章 標準的算定日数と各種加算","a":false,"q":"転院してきた患者の早期リハビリテーション加算は、自院に転院（入院）した日から起算する。","e":"転院前の保険医療機関に「入院した日」から起算します。転院で起算日はリセットされません。"},{"s":"第2章 標準的算定日数と各種加算","a":true,"q":"外来の運動器リハビリテーションで早期リハビリテーション加算を算定できるのは、大腿骨頚部骨折のみである。","e":"外来の運動器で算定可能なのは大腿骨頚部骨折のみです。"},{"s":"第2章 標準的算定日数と各種加算","a":true,"q":"急性期リハビリテーション加算の対象には、BIが10点以下の患者（入院中のものに限る）が含まれる。","e":"対象は、BI10点以下、認知症高齢者の日常生活自立度ランクM以上、特別な管理を要する処置（動脈ライン・人工呼吸器等）、感染対策が特に必要な感染症等の入院患者です。発症・手術・急性増悪から14日が限度です。"},{"s":"第2章 標準的算定日数と各種加算","a":false,"q":"初期加算は、発症、手術もしくは急性増悪から30日を限度として算定できる。","e":"初期加算は「14日」が限度です（算定要件にリハビリテーション科医師の常勤配置あり）。"},{"s":"第2章 標準的算定日数と各種加算","a":true,"q":"休日リハビリテーション加算は、加算の起算日から起算して30日目までを限度として算定できる。","e":"30日目までが限度です。起算日は、心大血管・呼吸器＝手術若しくは急性増悪から7日目又は治療開始日のいずれか早いもの、脳血管・運動器＝発症・手術又は急性増悪です。"},{"s":"第2章 標準的算定日数と各種加算","a":true,"q":"転院等で他の保険医療機関でリハビリが継続される予定の患者について、同意が得られた場合は、3ヶ月以内に作成したリハビリテーション総合実施計画書等を文書で提供する。","e":"患者の同意を得たうえで、3ヶ月以内に作成した総合実施計画書等を転院先へ文書で提供します。介護保険の通所リハ事業所等へ移行予定の場合も同様です。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":true,"q":"リハビリテーション総合実施計画書は、様式21を使用する。","e":"リハビリテーション総合実施計画書は様式21を使用します。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":false,"q":"リハビリテーション総合実施計画書の説明は、どの病棟でも必ず医師が行わなければならない。","e":"医師だけでなく、看護師・PT・OT・STによる説明も可能です。ただし回復期リハビリテーション病棟では引き続き医師による説明が必要です。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":false,"q":"回復期リハビリテーション病棟でも、総合実施計画書の説明は理学療法士が単独で行えばよい。","e":"回復期リハビリテーション病棟においては、引き続き医師による説明が必要です。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":false,"q":"リハビリテーション総合計画評価料は、リハビリ初回介入日に計画書を作成・説明すれば算定できる。","e":"初回は算定不可です。リハビリ開始後2回目の介入以降（3日程度経過後）に総合実施計画書を作成し、説明した場合に算定できます。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":true,"q":"リハビリテーション総合実施計画書は、リハビリ開始後原則7日以内、遅くとも14日以内に作成する必要がある。","e":"原則7日以内、遅くとも14日以内に作成します。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":false,"q":"新たな病名で疾患別リハビリテーション料を算定する場合、これまでの総合実施計画書をそのまま使用してよい。","e":"新たな病名で算定する場合は、新たにリハビリテーション総合実施計画書を作成する必要があります。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":true,"q":"リハビリテーション総合実施計画書は、多職種が共同して作成し、患者に交付する必要がある。","e":"多職種共同で作成し、個々の患者の状態に応じた内容・目標を空欄なく記載して、患者に交付します。その後、効果や実施方法を共同して評価（カンファレンス）します。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":true,"q":"介護リハビリテーションの利用を予定している患者に、脳血管疾患等・廃用症候群・運動器リハビリテーション料を算定している場合は、リハビリテーション総合計画評価料2を算定する。","e":"この場合はリハビリテーション総合計画評価料2を算定します。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":true,"q":"入院時訪問指導加算は、回復期リハ病棟への入院日前7日以内又は入院後7日以内に、退院後生活する患家等を訪問して情報収集・評価を行った場合に算定する。","e":"入院前7日以内又は入院後7日以内の訪問が要件です。リハビリテーション総合計画評価料の加算で、評価書は診療録への添付が必要です。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":false,"q":"入院時訪問指導加算の訪問は、病棟専従配置の者が行うことができる。","e":"研修書類では、入院時訪問指導加算は病棟専従配置の者が行うことは不可とされています。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":true,"q":"運動量増加機器加算は、脳卒中又は脊髄障害の急性発症に伴う上肢又は下肢の運動機能障害を有する患者に、発症日から2ヶ月を限度として月1回算定できる。","e":"発症日から起算して2ヶ月を限度に月1回です。リハビリテーション総合計画評価料の加算で、摘要欄に医学的必要性の記載、計画書に適応疾患・発症年月日・所見・機器名・実施予定期間の記載が必要です。"},{"s":"第3章 リハビリテーション総合計画評価料と加算","a":false,"q":"上肢と下肢の両方の運動機能障害に運動量増加機器を用いた場合でも、運動量増加機器加算は上肢・下肢あわせて1回分しか算定できない。","e":"上肢・下肢ともに機能障害のレベルを評価し、使用目的を総合実施計画書を用いて説明した場合、上肢・下肢別々に算定できます。"},{"s":"第4章 施設外リハ・急性増悪・廃用症候群・運動器不安定症","a":false,"q":"施設外リハビリ実施時、訓練場所との往復時間もリハビリテーションの実施時間に含めてよい。","e":"往復時間は実施時間に含みません。また往復を含めて常時従事者が付き添い、速やかに連絡・搬送できる体制の確保が必要です。"},{"s":"第4章 施設外リハ・急性増悪・廃用症候群・運動器不安定症","a":true,"q":"1日3単位を超えて施設外で疾患別リハビリを行う必要がある場合、一連の入院期間で合計3単位（別表第九の三の患者は6単位）に限り、別に疾患別リハビリとみなすことができる。","e":"1日3単位に加え、一連の入院期間中に合計3単位（別表第九の三の患者は6単位）まで算定可能です。"},{"s":"第4章 施設外リハ・急性増悪・廃用症候群・運動器不安定症","a":true,"q":"急性増悪とは、1週間以内にFIMまたはBIが10以上低下する状態等をいう。","e":"1週間以内にFIMまたはBIが10以上低下する状態等が該当します。"},{"s":"第4章 施設外リハ・急性増悪・廃用症候群・運動器不安定症","a":true,"q":"廃用症候群リハビリテーションの対象は、急性疾患等に伴う安静による廃用症候群で、治療開始時にFIM115以下・BI85以下の状態等の患者である。","e":"治療開始時にFIM115以下、BI85以下の状態等のものが対象です。"},{"s":"第4章 施設外リハ・急性増悪・廃用症候群・運動器不安定症","a":false,"q":"廃用症候群リハビリテーション料を算定する場合、廃用症候群に係る評価表による評価は3ヶ月ごとに行えばよい。","e":"廃用症候群に係る評価表を用いて「月ごと」に評価する必要があります。"},{"s":"第4章 施設外リハ・急性増悪・廃用症候群・運動器不安定症","a":true,"q":"運動器不安定症の運動機能評価の基準は、開眼片脚起立時間15秒未満、または3m TUGテスト11秒以上である。","e":"11の運動器疾患・状態の既往または罹患があり、日常生活自立度と運動機能評価（開眼片脚起立15秒未満またはTUG11秒以上）に該当するものをいいます。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":true,"q":"退院前訪問指導料は、継続して1月を超えて入院すると見込まれる患者の円滑な退院のため、入院中又は退院日に患家を訪問して指導した場合に算定できる。","e":"1月を超える入院が見込まれる患者が対象です。指導又は指示内容の要点を診療録等に記載します。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":false,"q":"特別養護老人ホームなど医師又は看護師等が配置されている施設に入所予定の患者も、退院前訪問指導料の対象となる。","e":"退院して家庭に復帰する患者が対象です。特養等、医師又は看護師等が配置されている施設への入所予定者は対象外です。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":false,"q":"回復期リハビリテーション病棟では、退院前訪問指導料は入院料に包括され、別に算定できない。","e":"回復期リハ病棟でも出来高で算定可能です（改定前は包括）。ただし2回算定する場合は入院時訪問指導加算との併算定はできません。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":true,"q":"退院前訪問指導料は、入院後14日以内と退院前に訪問指導を行った場合、退院日に2回分算定できる。","e":"入院後早期（14日以内）に必要があると認められて訪問し、さらに退院前にも訪問した場合、退院日に2回分算定できます。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":true,"q":"摂食機能療法1は、訓練を30分以上行った場合にのみ算定できる。","e":"摂食機能療法1は30分以上の訓練が必要です。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":false,"q":"摂食機能療法2は、脳卒中の発症から30日以内の患者に15分以上の訓練を行った場合に算定できる。","e":"摂食機能療法2は、脳卒中の発症から「14日以内」の患者に15分以上の訓練を行った場合です。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":false,"q":"PT又はOTが嚥下訓練（直接訓練）を行った場合も、摂食機能療法に含まれる。","e":"PT・OTで摂食機能療法に含まれるのは「摂食の際の体位設定、自助具の評価・設定」のみです。嚥下訓練（間接・直接）はST、看護師、准看護師、歯科衛生士が行う場合です。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":true,"q":"摂食機能療法の実施にあたっては、治療開始日、毎回の訓練内容、訓練の開始時間及び終了時間を診療録等に記載する必要がある。","e":"治療開始日・毎回の訓練内容・開始時間と終了時間の記載が必要です。計画の作成・説明、定期的な摂食機能検査による効果判定も必要です。"},{"s":"第5章 退院前訪問指導・摂食機能療法・退院時指導","a":true,"q":"退院時リハビリテーション指導料は、入院中にリハビリテーション・栄養・口腔連携体制加算、又は疾患別リハビリテーション料・摂食機能療法等を算定した患者に限り算定できる。","e":"対象は、当該保険医療機関での入院中にこれらを算定した患者に限られます。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":false,"q":"回復期リハビリテーション病棟では、FIMの定期的な測定は1ヶ月に1回以上行えばよい。","e":"定期的（「2週間に1回以上」）にFIMを測定し、結果を診療録等に記載します。入院時（転院時）と退院時の測定も必要です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":true,"q":"回復期リハビリテーション病棟では、入棟後2週間以内に、入棟時のFIM運動項目の合計及び項目別内訳を記載したリハビリテーション実施計画書を作成し、交付する。","e":"入棟後2週間以内に作成・交付します。退棟時にも退棟時のFIM運動項目を記載した計画書の作成・交付が必要です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":false,"q":"回復期リハビリテーションを要する状態の患者に対する1日あたりのリハビリ提供単位数は、平均2単位以上であればよい。","e":"「平均3単位以上」が必要です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":true,"q":"回復期リハビリテーション病棟入院料1では、専従のPT3名以上、OT2名以上、ST1名以上の配置が必要である。","e":"PT3名以上・OT2名以上・ST1名以上です。専従PTまたは専従OTのうち1名以上がいずれの日にも配置されている必要があります。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":false,"q":"回復期リハビリテーション病棟入院料1では、新規入院患者のうち4割以上が重症の患者である必要がある。","e":"「3割5分以上」です。重症の患者とは入院時のFIM得点で21点以上55点以下の患者をいいます。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":false,"q":"回復期リハビリテーション病棟入院料1のリハビリテーション実績指数は、40以上が必要である。","e":"リハビリテーション実績指数は「42以上」が必要です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":true,"q":"回復期リハビリテーション病棟では、FIMの測定に関わる職員を対象とした研修会を年1回以上開催する必要がある。","e":"FIMの測定に関する研修会を年1回以上開催することが必要です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":true,"q":"地域包括ケア病棟の在棟期間は、入棟した日から60日間である。","e":"入棟日より60日間です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":false,"q":"地域包括ケア病棟でリハビリテーションを提供する患者については、1日平均1単位以上を提供していればよい。","e":"リハビリを提供する患者については「1日平均2単位以上」の提供が必要です。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":true,"q":"DPC算定していた患者が地域包括ケア病棟に入棟した場合、DPC入院日Ⅱまでの期間は、リハビリテーションに係る費用を出来高で算定できる。","e":"DPC入院日Ⅱまでは出来高算定できます。このためその期間、地域包括ケア病棟の専従セラピストは疾患別リハビリテーション料等を算定できません。"},{"s":"第6章 回復期リハ病棟・地域包括ケア病棟","a":false,"q":"地域包括ケア病棟の専従セラピストは、疾患別リハビリテーション等を担当する専従者と兼務できる。","e":"地域包括ケア病棟には専従のPT・OT又はSTを1名以上配置する必要があり、疾患別リハビリテーション等の専従者との兼務はできません。"},{"s":"第7章 連携体制加算・身体拘束・病棟専従者","a":false,"q":"リハビリテーション・栄養・口腔連携体制加算は、計画を作成した日から起算して30日を限度に算定できる。","e":"計画を作成した日から起算して「14日」が限度です。"},{"s":"第7章 連携体制加算・身体拘束・病棟専従者","a":false,"q":"リハビリテーション・栄養・口腔連携体制加算では、入棟した患者全員に対し、原則入棟後72時間以内にADL・栄養状態・口腔状態の評価を行う。","e":"原則入棟後「48時間以内」に評価し、リハビリテーション・栄養管理・口腔管理に係る計画を作成します。"},{"s":"第7章 連携体制加算・身体拘束・病棟専従者","a":true,"q":"リハビリテーション・栄養・口腔連携体制加算の病棟専従の理学療法士等は、1日につき9単位を超えて疾患別リハビリテーション料等を算定できない。","e":"専従の理学療法士等は1日9単位を超えた算定はできません。また疾患別リハの対象とならない患者にもADLの維持・向上等を目的とした指導を行います。"},{"s":"第7章 連携体制加算・身体拘束・病棟専従者","a":false,"q":"チューブ類を抜かないようにミトン型の手袋を使用することは、身体拘束にはあたらない。","e":"ミトン手袋の使用、柵や壁で囲む、拘束ベルト、介護衣の着用はいずれも身体拘束であり、原則行ってはいけません。"},{"s":"第7章 連携体制加算・身体拘束・病棟専従者","a":false,"q":"回復期リハ病棟や地域包括ケア病棟の専従の療法士は、退院に向けた指導であっても、配置された病棟以外（屋外など）での業務には従事できない。","e":"当該病棟の入院患者の退院に向けた指導等については、屋外など配置された病棟以外での業務に従事可能です。"},{"s":"第7章 連携体制加算・身体拘束・病棟専従者","a":true,"q":"総合機能評価加算の対象は、入退院支援加算1または2を算定する患者で、65歳以上の者、もしくは40歳以上65歳未満で特定疾病を有する者である。","e":"対象はこのとおりです。病状の安定が見込まれた後できるだけ早期に、日常生活能力・認知機能・意欲等を総合的に評価し、その結果を踏まえて入退院支援を行った場合に算定します。"}];
+var CHAPTERS = [];
+QUESTIONS.forEach(function(q,i){ q.id=i; if(CHAPTERS.indexOf(q.s)<0) CHAPTERS.push(q.s); });
+
+var KEY='shinryo-hoshu-quiz-wrong-v1';
+var wrongIds = loadWrong();
+function loadWrong(){
+  try{ var a=JSON.parse(localStorage.getItem(KEY)||'[]');
+       return Array.isArray(a)?a.filter(function(n){return QUESTIONS[n];}):[]; }
+  catch(e){ return []; }
+}
+function saveWrong(){ try{ localStorage.setItem(KEY, JSON.stringify(wrongIds)); }catch(e){} }
+
+var $=function(id){return document.getElementById(id);};
+var state=null;
+
+function show(id){
+  ['home','chapters','quiz','result'].forEach(function(s){ $(s).hidden = (s!==id); });
+  window.scrollTo(0,0);
+}
+function shuffled(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; }
+  return a;
+}
+function refreshHome(){
+  $('allDesc').textContent='全'+QUESTIONS.length+'問をまとめて解きます';
+  var b=document.querySelector('[data-mode="review"]');
+  b.disabled = wrongIds.length===0;
+  $('reviewDesc').textContent = wrongIds.length
+    ? '前回までに間違えた '+wrongIds.length+' 問を解き直します'
+    : '間違えた問題はまだありません';
+}
+function start(list,label,keepOrder){
+  if(!list.length) return;
+  if($('shuffle').checked && !keepOrder) list=shuffled(list);
+  state={list:list,label:label,i:0,right:0,missed:[]};
+  show('quiz'); render();
+}
+function render(){
+  var q=state.list[state.i];
+  $('count').textContent=state.label+'　'+(state.i+1)+' / '+state.list.length+' 問';
+  $('barFill').style.width=(state.i/state.list.length*100)+'%';
+  $('chap').textContent=q.s;
+  $('qText').textContent=q.q;
+  $('fb').hidden=true; $('next').hidden=true;
+  document.querySelectorAll('.ans button').forEach(function(b){ b.disabled=false; b.classList.remove('picked'); });
+}
+function answer(pick,btn){
+  var q=state.list[state.i], ok=(pick===q.a);
+  document.querySelectorAll('.ans button').forEach(function(b){ b.disabled=true; });
+  btn.classList.add('picked');
+  var at=wrongIds.indexOf(q.id);
+  if(ok){ state.right++; if(at>=0) wrongIds.splice(at,1); }
+  else { state.missed.push(q); if(at<0) wrongIds.push(q.id); }
+  saveWrong();
+  $('fb').className='fb '+(ok?'ok':'ng');
+  $('fbHead').textContent= ok ? '⭕ 正解です！' : '❌ 不正解です';
+  $('fbAns').textContent='正解は「'+(q.a?'〇':'×')+'」';
+  $('fbText').textContent=q.e;
+  $('fb').hidden=false;
+  $('barFill').style.width=((state.i+1)/state.list.length*100)+'%';
+  var n=$('next');
+  n.textContent = (state.i+1<state.list.length) ? '次の問題へ' : '結果を見る';
+  n.hidden=false;
+  n.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function finish(){
+  var total=state.list.length, rate=Math.round(state.right/total*100);
+  $('resTitle').textContent=state.label+' の結果';
+  $('resScore').textContent=state.right;
+  $('resTotal').textContent=' / '+total+' 問正解';
+  $('resRate').textContent='正答率 '+rate+'%';
+  var box=$('wrongList'); box.textContent='';
+  if(state.missed.length){
+    $('wrongHead').textContent='間違えた問題（'+state.missed.length+'問）';
+    state.missed.forEach(function(q){
+      var d=document.createElement('div'); d.className='wrong';
+      var p1=document.createElement('p'); p1.className='wq'; p1.textContent=q.q;
+      var p2=document.createElement('p'); p2.className='wa';
+      var b=document.createElement('b'); b.textContent='正解：'+(q.a?'〇':'×')+'　';
+      p2.appendChild(b); p2.appendChild(document.createTextNode(q.e));
+      d.appendChild(p1); d.appendChild(p2); box.appendChild(d);
+    });
+  } else {
+    $('wrongHead').textContent='全問正解です。おつかれさまでした！';
+  }
+  $('retryWrong').hidden = state.missed.length===0;
+  show('result');
+}
+
+document.querySelectorAll('.mode').forEach(function(b){
+  b.addEventListener('click',function(){
+    var m=b.getAttribute('data-mode');
+    if(m==='all') start(QUESTIONS.slice(),'全問');
+    else if(m==='random') start(shuffled(QUESTIONS).slice(0,10),'ランダム10問',true);
+    else if(m==='review') start(wrongIds.slice().sort(function(a,b){return a-b;}).map(function(n){return QUESTIONS[n];}),'復習');
+    else if(m==='chapter') show('chapters');
+  });
+});
+CHAPTERS.forEach(function(c){
+  var list=QUESTIONS.filter(function(q){return q.s===c;});
+  var b=document.createElement('button'); b.className='mode';
+  var t=document.createElement('b'); t.textContent=c;
+  var s=document.createElement('span'); s.textContent=list.length+'問';
+  b.appendChild(t); b.appendChild(s);
+  b.addEventListener('click',function(){ start(list.slice(), c.split(' ')[0]); });
+  $('chapList').appendChild(b);
+});
+document.querySelectorAll('.ans button').forEach(function(b){
+  b.addEventListener('click',function(){ answer(b.getAttribute('data-pick')==='true', b); });
+});
+$('next').addEventListener('click',function(){
+  state.i++; if(state.i<state.list.length){ render(); window.scrollTo(0,0); } else finish();
+});
+$('quit').addEventListener('click',function(){ refreshHome(); show('home'); });
+$('retryWrong').addEventListener('click',function(){ start(state.missed.slice(),'復習'); });
+document.querySelectorAll('[data-go="home"]').forEach(function(b){
+  b.addEventListener('click',function(){ refreshHome(); show('home'); });
+});
+refreshHome();
+</script>
+</body>
+</html>
